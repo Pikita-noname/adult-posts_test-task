@@ -21,7 +21,8 @@
       "@php -l bootstrap.php",
       "find src config public database -type f -name '*.php' -print0 | xargs -0 -n1 php -l"
     ],
-    "db:init": "@php database/init.php"
+    "db:init": "@php database/init.php",
+    "db:seed": "@php database/seed.php"
   },
   "config": {
     "sort-packages": true,
