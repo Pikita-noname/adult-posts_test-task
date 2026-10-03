@@ -4,11 +4,15 @@ namespace App\Http;
 
 final class Request
 {
-    public function __construct(
-        public readonly string $method,
-        public readonly ?string $path,
-        public readonly array $query,
-    ) {
+    public readonly string $method;
+    public readonly ?string $path;
+    public readonly array $query;
+
+    public function __construct(string $method, ?string $path, array $query)
+    {
+        $this->method = $method;
+        $this->path = $path;
+        $this->query = $query;
     }
 
     public static function capture(): self

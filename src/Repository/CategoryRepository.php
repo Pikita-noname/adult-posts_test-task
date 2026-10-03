@@ -4,10 +4,13 @@ namespace App\Repository;
 
 use PDO;
 
-final class CategoryRepository
+class CategoryRepository
 {
-    public function __construct(private PDO $db)
+    private PDO $db;
+
+    public function __construct(PDO $db)
     {
+        $this->db = $db;
     }
 
     public function withPosts(): array

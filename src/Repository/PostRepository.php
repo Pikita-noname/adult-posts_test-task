@@ -4,10 +4,13 @@ namespace App\Repository;
 
 use PDO;
 
-final class PostRepository
+class PostRepository
 {
-    public function __construct(private PDO $db)
+    private PDO $db;
+
+    public function __construct(PDO $db)
     {
+        $this->db = $db;
     }
 
     public function countForCategory(int $categoryId): int
@@ -19,13 +22,16 @@ final class PostRepository
         );
         $statement->execute([$categoryId]);
 
-        return (int) $statement->fetchColumn();
+        return (int)$statement->fetchColumn();
     }
 
     public function forCategory(int $categoryId, string $sort = 'date', int $limit = 3, int $offset = 0): array
     {
         // Only fixed SQL fragments can become part of ORDER BY.
-        $order = $sort === 'views' ? 'p.views DESC, p.published_at DESC, p.id DESC' : 'p.published_at DESC, p.id DESC';
+        $order = match ($sort) {
+            'views' => 'p.views DESC, p.published_at DESC, p.id DESC',
+            default => 'p.published_at DESC, p.id DESC',
+        };
         $statement = $this->db->prepare(
             'SELECT p.id, p.slug, p.title, p.image, p.description, p.views, p.published_at
              FROM posts p JOIN post_category pc ON pc.post_id = p.id

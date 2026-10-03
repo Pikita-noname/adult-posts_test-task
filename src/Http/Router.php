@@ -10,16 +10,16 @@ final class Router
     public function get(string $path, array $handler): void
     {
         $segments = explode('/', trim($path, '/'));
-        foreach ($segments as &$segment) {
+        $patterns = [];
+        foreach ($segments as $segment) {
             if (preg_match('/^\{([a-zA-Z_][a-zA-Z0-9_]*)\}$/D', $segment, $parameter)) {
-                $segment = '(?P<' . $parameter[1] . '>[a-z0-9]+(?:-[a-z0-9]+)*)';
+                $patterns[] = '(?P<' . $parameter[1] . '>[a-z0-9]+(?:-[a-z0-9]+)*)';
             } else {
-                $segment = preg_quote($segment, '~');
+                $patterns[] = preg_quote($segment, '~');
             }
         }
-        unset($segment);
 
-        $pattern = $path === '/' ? '~^/$~D' : '~^/' . implode('/', $segments) . '/?$~D';
+        $pattern = $path === '/' ? '~^/$~D' : '~^/' . implode('/', $patterns) . '/?$~D';
         $this->routes[] = ['pattern' => $pattern, 'handler' => $handler];
     }
 

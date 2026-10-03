@@ -2,16 +2,22 @@
 
 namespace App\Http;
 
+use App\Controller\BlogController;
 use App\Database\Connection;
 use App\Repository\CategoryRepository;
 use App\Repository\PostRepository;
+use App\Service\BlogService;
 use App\View\View;
+use LogicException;
 use Throwable;
 
 final class Application
 {
-    public function __construct(private string $root)
+    private string $root;
+
+    public function __construct(string $root)
     {
+        $this->root = $root;
     }
 
     public function run(): void
@@ -60,12 +66,14 @@ final class Application
             $route = $router->match($request->path);
             [$controllerClass, $action] = $route['handler'];
             $db = Connection::create($config['db']);
-            $controller = new $controllerClass(
+            $blogService = new BlogService(
                 new CategoryRepository($db),
                 new PostRepository($db),
-                $view,
-                $request,
             );
+            $controllers = [
+                BlogController::class => new BlogController($blogService, $view, $request),
+            ];
+            $controller = $controllers[$controllerClass] ?? throw new LogicException('Unknown controller: ' . $controllerClass);
 
             return $controller->$action(...array_values($route['parameters']));
         } catch (NotFound $exception) {
