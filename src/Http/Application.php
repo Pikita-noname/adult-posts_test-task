@@ -36,7 +36,6 @@ final class Application
         } catch (Throwable $exception) {
             error_log((string) $exception);
             http_response_code(500);
-            // The fallback must also work when Smarty or the database is unavailable.
             $html = '<!doctype html><html lang="ru"><meta charset="utf-8"><title>Ошибка сервера</title>'
                 . '<h1>Не удалось загрузить страницу</h1><p>Попробуйте ещё раз немного позже.</p>'
                 . '<a href="/">На главную</a></html>';

@@ -16,12 +16,12 @@ class CategoryRepository
     public function withPosts(): array
     {
         return $this->db->query(
-            'SELECT c.*, COUNT(p.id) AS post_count
-             FROM categories c
-             JOIN post_category pc ON pc.category_id = c.id
-             JOIN posts p ON p.id = pc.post_id
-             WHERE p.published_at <= CURRENT_TIMESTAMP
-             GROUP BY c.id
+            'SELECT c.* FROM categories c
+             WHERE EXISTS (
+                 SELECT 1 FROM post_category pc
+                 JOIN posts p ON p.id = pc.post_id
+                 WHERE pc.category_id = c.id AND p.published_at <= CURRENT_TIMESTAMP
+             )
              ORDER BY c.name, c.id'
         )->fetchAll();
     }
