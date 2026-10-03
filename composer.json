@@ -1,0 +1,32 @@
+{
+  "name": "pikita-noname/adult-posts-test-task",
+  "description": "Plain PHP blog with MySQL and Smarty",
+  "type": "project",
+  "license": "proprietary",
+  "require": {
+    "php": "^8.1",
+    "ext-mbstring": "*",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*",
+    "smarty/smarty": "^5.0",
+    "vlucas/phpdotenv": "^5.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "scripts": {
+    "lint": [
+      "@php -l bootstrap.php",
+      "find src config public database -type f -name '*.php' -print0 | xargs -0 -n1 php -l"
+    ],
+    "db:init": "@php database/init.php"
+  },
+  "config": {
+    "sort-packages": true,
+    "platform": {
+      "php": "8.1.0"
+    }
+  }
+}
