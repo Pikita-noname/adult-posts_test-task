@@ -4,6 +4,8 @@ use Dotenv\Dotenv;
 
 require __DIR__ . '/vendor/autoload.php';
 
+// PHP may omit E from variables_order; preserve process environment overrides.
+$_ENV += getenv();
 Dotenv::createImmutable(__DIR__)->safeLoad();
 
 date_default_timezone_set($_ENV['APP_TIMEZONE'] ?? 'UTC');
