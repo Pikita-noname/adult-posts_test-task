@@ -1,0 +1,31 @@
+:root {
+    font-family: system-ui, sans-serif;
+    color: #20242b;
+    background: #f5f6f8;
+    line-height: 1.6;
+}
+
+body {
+    margin: 0;
+}
+
+.site-header,
+main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.site-header {
+    border-bottom: 1px solid #d9dee5;
+    font-weight: 700;
+}
+
+a {
+    color: #2459a6;
+}
+
+h1 {
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+}
