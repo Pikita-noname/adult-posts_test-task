@@ -1,0 +1,55 @@
+services:
+  caddy:
+    build:
+      context: .
+      target: caddy
+    ports:
+      - "127.0.0.1:${APP_PORT:-8080}:80"
+    depends_on:
+      php:
+        condition: service_healthy
+    restart: unless-stopped
+
+  php:
+    build:
+      context: .
+      target: php
+    environment:
+      APP_NAME: ${APP_NAME:-Adult Posts}
+      APP_DEBUG: "false"
+      APP_TIMEZONE: UTC
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: adult_posts
+      DB_USER: adult_posts
+      DB_PASSWORD: ${DOCKER_DB_PASSWORD:-local_password}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(@fsockopen('127.0.0.1', 9000) ? 0 : 1);"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: adult_posts
+      MYSQL_USER: adult_posts
+      MYSQL_PASSWORD: ${DOCKER_DB_PASSWORD:-local_password}
+      MYSQL_ROOT_PASSWORD: ${DOCKER_ROOT_PASSWORD:-local_root_password}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_PASSWORD\" mysql -h 127.0.0.1 -u \"$$MYSQL_USER\" \"$$MYSQL_DATABASE\" -e 'SELECT 1' > /dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+    restart: unless-stopped
+
+volumes:
+  mysql_data:

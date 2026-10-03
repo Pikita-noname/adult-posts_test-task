@@ -1,0 +1,11 @@
+.git
+.idea
+.codex
+.agents
+.aws
+.env
+.env.*
+vendor
+node_modules
+var
+public/router.php

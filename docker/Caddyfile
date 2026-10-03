@@ -1,0 +1,12 @@
+:80 {
+	root * /var/www/html/public
+	encode gzip
+
+	@private path /.* /router.php /router.php/*
+	respond @private 404
+
+	php_fastcgi php:9000 {
+		capture_stderr
+	}
+	file_server
+}
