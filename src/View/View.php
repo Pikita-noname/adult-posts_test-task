@@ -16,7 +16,9 @@ final class View
             $path = $root . '/var/smarty/' . $directory;
 
             if (!is_dir($path)) {
-                mkdir($path, 0775, true);
+                if (!mkdir($path, 0775, true) && !is_dir($path)) {
+                    throw new RuntimeException('Cannot create Smarty directory: ' . $path);
+                }
             }
         }
 
