@@ -1,0 +1,11 @@
+{
+  "name": "adult-posts-styles",
+  "private": true,
+  "scripts": {
+    "build": "sass assets/scss/app.scss public/assets/css/app.css --style=compressed --no-source-map",
+    "styles:watch": "npm run build -- --watch"
+  },
+  "devDependencies": {
+    "sass": "1.105.1"
+  }
+}
