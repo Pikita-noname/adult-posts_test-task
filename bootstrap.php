@@ -2,7 +2,7 @@
 
 use Dotenv\Dotenv;
 
-require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 // PHP may omit E from variables_order; preserve process environment overrides.
 $_ENV += getenv();

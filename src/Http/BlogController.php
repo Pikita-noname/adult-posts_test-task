@@ -14,6 +14,7 @@ final class BlogController
         private CategoryRepository $categories,
         private PostRepository $posts,
         private View $view,
+        private Request $request,
     ) {
     }
 
@@ -31,13 +32,14 @@ final class BlogController
         ]);
     }
 
-    public function category(string $slug, array $query): string
+    public function category(string $slug): string
     {
         $category = $this->categories->findBySlug($slug);
         if ($category === null) {
             throw new NotFound();
         }
 
+        $query = $this->request->query;
         $sort = ($query['sort'] ?? '') === 'views' ? 'views' : 'date';
         $rawPage = $query['page'] ?? '1';
         $page = is_string($rawPage) ? filter_var($rawPage, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]) : false;
@@ -63,7 +65,7 @@ final class BlogController
         ]);
     }
 
-    public function post(string $slug, bool $countView = true): string
+    public function post(string $slug): string
     {
         $post = $this->posts->findBySlug($slug);
         if ($post === null) {
@@ -71,7 +73,7 @@ final class BlogController
         }
 
         $postId = (int) $post['id'];
-        if ($countView) {
+        if ($this->request->method === 'GET') {
             $this->posts->incrementViews($postId);
             $post['views']++;
         }
